@@ -7,4 +7,3 @@ RUN chmod +x /root/run
 EXPOSE 9090
 
 ENTRYPOINT ["/root/run"]
-~                           
