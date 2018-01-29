@@ -1,5 +1,6 @@
 #FROM docker.io/centos
-FROM bjdhub.haihangyun.com/openshift/php
+FROM docker-registry.default.svc:5000/pro001/test002
+#FROM bjdhub.haihangyun.com/openshift/php
 
 ADD ./run /root/run
 
