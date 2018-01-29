@@ -1,4 +1,5 @@
-FROM docker.io/centos
+#FROM docker.io/centos
+FROM bjdhub.haihangyun.com/openshift/php
 
 ADD ./run /root/run
 
