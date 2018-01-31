@@ -4,7 +4,7 @@ FROM docker-registry.default.svc:5000/pro001/test002
 
 ADD ./run /opt/app-root/src/run
 
-RUN chmod +x /opt/app-root/src/run
+#RUN chmod +x /opt/app-root/src/run
 
 EXPOSE 9090
 
