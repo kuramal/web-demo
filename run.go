@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
@@ -48,9 +49,37 @@ func sayhelloName(w http.ResponseWriter, r *http.Request) {
 	*/
 	r.ParseForm() //解析参数，默认是不会解析的
 	fmt.Printf("%v  %v   \n", r.RemoteAddr, time.Now())
-	fmt.Fprintf(w, "Hello world!    ")                //这个写入到w的是输出到客户端的
+	fmt.Fprintf(w, "A Hello From Here  !!! ")         //这个写入到w的是输出到客户端的
 	fmt.Fprintf(w, "%v\n", time.Now())                //这个写入到w的是输出到客户端的
 	fmt.Fprintf(w, "............    %v", hostIPGet()) //这个写入到w的是输出到客户端的
+	fmt.Fprintf(w, "\n")
+}
+
+func sayworldName(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm() //解析参数，默认是不会解析的
+	fmt.Printf("%v  %v   \n", r.RemoteAddr, time.Now())
+	fmt.Fprintf(w, "Hello world !!! ")                //这个写入到w的是输出到客户端的
+	fmt.Fprintf(w, "%v\n", time.Now())                //这个写入到w的是输出到客户端的
+	fmt.Fprintf(w, "............    %v", hostIPGet()) //这个写入到w的是输出到客户端的
+	fmt.Fprintf(w, "\n")
+}
+
+func trace(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm() //解析参数，默认是不会解析的
+	fmt.Printf("%v  %v   \n", r.RemoteAddr, time.Now())
+	remote := os.Getenv("TRACEURL")
+	fmt.Printf("remote: %v\n", remote)
+	resp, err := http.Get(remote)
+	if err != nil {
+		fmt.Fprintf(w, "Failed !!! \n") //这个写入到w的是输出到客户端的
+		return
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+
+	fmt.Fprintf(w, "Remote Message:\n\"  %v\"\n", string(body)) //这个写入到w的是输出到客户端的
+	fmt.Fprintf(w, "%v\n", time.Now())                          //这个写入到w的是输出到客户端的
+	fmt.Fprintf(w, "............    %v", hostIPGet())           //这个写入到w的是输出到客户端的
 	fmt.Fprintf(w, "\n")
 }
 
@@ -61,6 +90,8 @@ func home(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.HandleFunc("/", home)               //设置访问的路由
 	http.HandleFunc("/hello", sayhelloName)  //设置访问的路由
+	http.HandleFunc("/world", sayworldName)  //设置访问的路由
+	http.HandleFunc("/trace", trace)         //设置访问的路由
 	err := http.ListenAndServe(":8080", nil) //设置监听的端口
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
