@@ -1,4 +1,4 @@
-FROM harbor.infra.haihangyun.com/pub/web-tools:8080
+FROM centos
 
 ADD ./run /web-server
 
